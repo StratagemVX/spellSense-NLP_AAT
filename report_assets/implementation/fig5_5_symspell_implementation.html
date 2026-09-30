@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  body {
+    margin: 0;
+    padding: 15px;
+    background: #0f172a;
+    font-family: 'Consolas', 'Courier New', monospace;
+    display: flex;
+    justify-content: center;
+  }
+  .window {
+    width: 900px;
+    background: #1e1e1e;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    overflow: hidden;
+  }
+  .titlebar {
+    background: #252526;
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #333;
+    font-size: 12px;
+    color: #cccccc;
+  }
+  .dots {
+    display: flex;
+    gap: 6px;
+  }
+  .dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+  }
+  .dot-red { background: #ff5f56; }
+  .dot-yellow { background: #ffbd2e; }
+  .dot-green { background: #27c93f; }
+  .tabs {
+    background: #2d2d2d;
+    display: flex;
+    border-bottom: 1px solid #1e1e1e;
+  }
+  .tab {
+    padding: 7px 16px;
+    background: #1e1e1e;
+    color: #ffffff;
+    font-size: 12px;
+    border-right: 1px solid #252526;
+    border-top: 2px solid #007acc;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .code-area {
+    padding: 14px;
+    font-size: 12px;
+    line-height: 1.55;
+    color: #d4d4d4;
+    overflow-x: auto;
+  }
+  .kw { color: #569cd6; font-weight: bold; }
+  .str { color: #ce9178; }
+  .fn { color: #dcdcaa; }
+  .num { color: #b5cea8; }
+  .comment { color: #6a9955; font-style: italic; }
+  .type { color: #4ec9b0; }
+  .var { color: #9cdcfe; }
+  .line-num {
+    display: inline-block;
+    width: 32px;
+    color: #858585;
+    user-select: none;
+    text-align: right;
+    margin-right: 14px;
+  }
+</style>
+</head>
+<body>
+<div class="window">
+  <div class="titlebar">
+    <div class="dots">
+      <div class="dot dot-red"></div>
+      <div class="dot dot-yellow"></div>
+      <div class="dot dot-green"></div>
+    </div>
+    <div style="font-weight: 500;">SymSpell Singleton & Symmetric Delete Engine - backend/app/services/spelling_service.py</div>
+    <div style="color: #64748b; font-size: 11px;">SpellSense NLP Suite</div>
+  </div>
+  <div class="tabs">
+    <div class="tab">
+      <span>📄</span>
+      <span>spelling_service.py</span>
+    </div>
+  </div>
+  <div class="code-area">
+    <div><span class="line-num">1</span><span class="kw">class</span> <span class="type">SpellingService</span>:</div>
+<div><span class="line-num">2</span>    <span class="var">_instance</span> = <span class="kw">None</span></div>
+<div><span class="line-num">3</span>    <span class="kw">def</span> <span class="fn">__new__</span>(<span class="var">cls</span>):</div>
+<div><span class="line-num">4</span>        <span class="kw">if</span> <span class="var">cls</span>.<span class="var">_instance</span> <span class="kw">is</span> <span class="kw">None</span>:</div>
+<div><span class="line-num">5</span>            <span class="var">cls</span>.<span class="var">_instance</span> = <span class="fn">super</span>().<span class="fn">__new__</span>(<span class="var">cls</span>)</div>
+<div><span class="line-num">6</span>            <span class="var">cls</span>.<span class="var">_instance</span>.<span class="fn">_init_engine</span>()</div>
+<div><span class="line-num">7</span>        <span class="kw">return</span> <span class="var">cls</span>.<span class="var">_instance</span></div>
+<div><span class="line-num">8</span></div>
+<div><span class="line-num">9</span>    <span class="kw">def</span> <span class="fn">_init_engine</span>(<span class="var">self</span>):</div>
+<div><span class="line-num">10</span>        <span class="comment"># SymSpell with max_dictionary_edit_distance=2 and prefix_length=7</span></div>
+<div><span class="line-num">11</span>        <span class="var">self</span>.<span class="var">_symspell</span> = <span class="type">SymSpell</span>(<span class="var">max_dictionary_edit_distance</span>=<span class="num">2</span>, <span class="var">prefix_length</span>=<span class="num">7</span>)</div>
+<div><span class="line-num">12</span>        <span class="var">dict_path</span> = <span class="var">pkg_resources</span>.<span class="fn">resource_filename</span>(<span class="str">"symspellpy"</span>, <span class="str">"frequency_dictionary_en_82_765.txt"</span>)</div>
+<div><span class="line-num">13</span>        <span class="var">self</span>.<span class="var">_symspell</span>.<span class="fn">load_dictionary</span>(<span class="var">dict_path</span>, <span class="var">term_index</span>=<span class="num">0</span>, <span class="var">count_index</span>=<span class="num">1</span>)</div>
+<div><span class="line-num">14</span>        <span class="var">bigram_path</span> = <span class="var">pkg_resources</span>.<span class="fn">resource_filename</span>(<span class="str">"symspellpy"</span>, <span class="str">"frequency_bigramdictionary_en_243_342.txt"</span>)</div>
+<div><span class="line-num">15</span>        <span class="var">self</span>.<span class="var">_symspell</span>.<span class="fn">load_bigram_dictionary</span>(<span class="var">bigram_path</span>, <span class="var">term_index</span>=<span class="num">0</span>, <span class="var">count_index</span>=<span class="num">2</span>)</div>
+<div><span class="line-num">16</span>        <span class="comment"># Cache raw vocabulary words in a set for O(1) hash table lookups</span></div>
+<div><span class="line-num">17</span>        <span class="var">self</span>.<span class="var">_common_vocab</span> = <span class="fn">set</span>(<span class="var">self</span>.<span class="var">_symspell</span>.<span class="var">words</span>.<span class="fn">keys</span>())</div>
+
+  </div>
+</div>
+</body>
+</html>

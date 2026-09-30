@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  body {
+    margin: 0;
+    padding: 15px;
+    background: #0f172a;
+    font-family: 'Consolas', 'Courier New', monospace;
+    display: flex;
+    justify-content: center;
+  }
+  .window {
+    width: 900px;
+    background: #1e1e1e;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    overflow: hidden;
+  }
+  .titlebar {
+    background: #252526;
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #333;
+    font-size: 12px;
+    color: #cccccc;
+  }
+  .dots {
+    display: flex;
+    gap: 6px;
+  }
+  .dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+  }
+  .dot-red { background: #ff5f56; }
+  .dot-yellow { background: #ffbd2e; }
+  .dot-green { background: #27c93f; }
+  .tabs {
+    background: #2d2d2d;
+    display: flex;
+    border-bottom: 1px solid #1e1e1e;
+  }
+  .tab {
+    padding: 7px 16px;
+    background: #1e1e1e;
+    color: #ffffff;
+    font-size: 12px;
+    border-right: 1px solid #252526;
+    border-top: 2px solid #007acc;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .code-area {
+    padding: 14px;
+    font-size: 12px;
+    line-height: 1.55;
+    color: #d4d4d4;
+    overflow-x: auto;
+  }
+  .kw { color: #569cd6; font-weight: bold; }
+  .str { color: #ce9178; }
+  .fn { color: #dcdcaa; }
+  .num { color: #b5cea8; }
+  .comment { color: #6a9955; font-style: italic; }
+  .type { color: #4ec9b0; }
+  .var { color: #9cdcfe; }
+  .line-num {
+    display: inline-block;
+    width: 32px;
+    color: #858585;
+    user-select: none;
+    text-align: right;
+    margin-right: 14px;
+  }
+</style>
+</head>
+<body>
+<div class="window">
+  <div class="titlebar">
+    <div class="dots">
+      <div class="dot dot-red"></div>
+      <div class="dot dot-yellow"></div>
+      <div class="dot dot-green"></div>
+    </div>
+    <div style="font-weight: 500;">Single Word Deep Analysis Endpoint - backend/app/api/endpoints/correction.py</div>
+    <div style="color: #64748b; font-size: 11px;">SpellSense NLP Suite</div>
+  </div>
+  <div class="tabs">
+    <div class="tab">
+      <span>📄</span>
+      <span>correction.py</span>
+    </div>
+  </div>
+  <div class="code-area">
+    <div><span class="line-num">1</span><span class="kw">@router</span>.<span class="fn">post</span>(<span class="str">"/analyze-word"</span>, <span class="var">response_model</span>=<span class="type">SingleWordAnalysis</span>)</div>
+<div><span class="line-num">2</span><span class="kw">async def</span> <span class="fn">analyze_single_word</span>(<span class="var">request</span>: <span class="type">WordAnalysisRequest</span>):</div>
+<div><span class="line-num">3</span>    <span class="str">"""Returns detailed candidate generation breakdown, deletes, and metrics."""</span></div>
+<div><span class="line-num">4</span>    <span class="var">word</span> = <span class="var">request</span>.<span class="var">word</span>.<span class="fn">strip</span>()</div>
+<div><span class="line-num">5</span>    <span class="kw">if not</span> <span class="var">word</span>:</div>
+<div><span class="line-num">6</span>        <span class="kw">raise</span> <span class="type">HTTPException</span>(<span class="var">status_code</span>=<span class="num">400</span>, <span class="var">detail</span>=<span class="str">"Word cannot be empty"</span>)</div>
+<div><span class="line-num">7</span>    <span class="var">analysis</span> = <span class="var">spelling_service</span>.<span class="fn">analyze_word</span>(</div>
+<div><span class="line-num">8</span>        <span class="var">word</span>=<span class="var">word</span>,</div>
+<div><span class="line-num">9</span>        <span class="var">max_edit_distance</span>=<span class="var">request</span>.<span class="var">max_edit_distance</span></div>
+<div><span class="line-num">10</span>    )</div>
+<div><span class="line-num">11</span>    <span class="kw">return</span> <span class="var">analysis</span></div>
+
+  </div>
+</div>
+</body>
+</html>

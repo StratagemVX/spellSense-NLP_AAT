@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  body {
+    margin: 0;
+    padding: 30px;
+    background: #ffffff;
+    font-family: 'Times New Roman', serif;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .diagram-container {
+    width: 680px;
+    background: #ffffff;
+    border: 1px solid #d0d7de;
+    padding: 25px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  }
+  .box {
+    background: #f0f4ff;
+    border: 1.5px solid #3b66bc;
+    border-radius: 4px;
+    padding: 0;
+    font-size: 13px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.08);
+  }
+  .box-header {
+    background: #dbeafe;
+    padding: 6px 12px;
+    font-weight: bold;
+    text-align: center;
+    border-bottom: 1.5px solid #3b66bc;
+    color: #1e3a8a;
+  }
+  .box-body {
+    padding: 8px 12px;
+    line-height: 1.5;
+    color: #1f2937;
+    font-family: 'Courier New', monospace;
+    font-size: 11.5px;
+  }
+  .arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    color: #4b5563;
+    font-weight: bold;
+  }
+  .arrow-line {
+    width: 2px;
+    height: 25px;
+    background: #4b5563;
+  }
+  .arrow-down {
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 7px solid #4b5563;
+  }
+  .row {
+    display: flex;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 20px;
+  }
+  .col-center {
+    display: flex;
+    justify-content: center;
+    margin: 8px 0;
+  }
+</style>
+</head>
+<body>
+<div class="diagram-container">
+  <!-- User Entity -->
+  <div class="col-center">
+    <div class="box" style="width: 240px;">
+      <div class="box-header">User / Client</div>
+      <div class="box-body">
+        + String session_id<br>
+        + String client_ip<br>
+        + DateTime timestamp
+      </div>
+    </div>
+  </div>
+
+  <div class="col-center">
+    <div class="arrow">
+      <div class="arrow-line"></div>
+      <div class="arrow-down"></div>
+      <span style="font-size: 11px; margin-top: 2px;">submits text</span>
+    </div>
+  </div>
+
+  <!-- InputText / CorrectionRequest -->
+  <div class="col-center">
+    <div class="box" style="width: 280px;">
+      <div class="box-header">CorrectionRequest</div>
+      <div class="box-body">
+        + String text (max 5000 chars)<br>
+        + String algorithm ("compare"|"symspell"|"textblob")
+      </div>
+    </div>
+  </div>
+
+  <div class="col-center">
+    <div class="arrow">
+      <div class="arrow-line"></div>
+      <div class="arrow-down"></div>
+      <span style="font-size: 11px; margin-top: 2px;">dispatches to</span>
+    </div>
+  </div>
+
+  <!-- Central Correction Engine -->
+  <div class="col-center">
+    <div class="box" style="width: 320px; border-color: #7c3aed;">
+      <div class="box-header" style="background: #ede9fe; color: #5b21b6; border-color: #7c3aed;">SpellingCorrectionEngine</div>
+      <div class="box-body">
+        + tokenize_words(text: String): List&lt;Token&gt;<br>
+        + correct_text(text, algo): CorrectionResponse<br>
+        + compare_candidates(tb, ss): Recommendation
+      </div>
+    </div>
+  </div>
+
+  <div class="col-center" style="margin: 10px 0;">
+    <div style="display: flex; justify-content: space-around; width: 80%;">
+      <div class="arrow" style="transform: rotate(20deg);">
+        <div class="arrow-line" style="height: 25px;"></div>
+        <div class="arrow-down"></div>
+      </div>
+      <div class="arrow" style="transform: rotate(-20deg);">
+        <div class="arrow-line" style="height: 25px;"></div>
+        <div class="arrow-down"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dual NLP Engines -->
+  <div class="row">
+    <div class="box" style="flex: 1; border-color: #2563eb;">
+      <div class="box-header" style="background: #dbeafe; color: #1e40af; border-color: #2563eb;">TextBlobEngine</div>
+      <div class="box-body">
+        + NorvigSpellCheckModel<br>
+        + generate_candidates(word: str)<br>
+        + unigram_probability(word: str)<br>
+        + correct_sentence(text: str)
+      </div>
+    </div>
+
+    <div class="box" style="flex: 1; border-color: #9333ea;">
+      <div class="box-header" style="background: #f3e8ff; color: #6b21a8; border-color: #9333ea;">SymSpellEngine</div>
+      <div class="box-body">
+        + frequency_dictionary (82k+ unigrams)<br>
+        + bigram_dictionary<br>
+        + lookup(word, max_distance=2)<br>
+        + symmetric_delete_transform()
+      </div>
+    </div>
+  </div>
+
+  <div class="col-center" style="margin-top: 15px;">
+    <div class="arrow">
+      <div class="arrow-line" style="height: 20px;"></div>
+      <div class="arrow-down"></div>
+      <span style="font-size: 11px;">produces consensus</span>
+    </div>
+  </div>
+
+  <!-- Result & Statistics -->
+  <div class="row" style="margin-top: 5px;">
+    <div class="box" style="flex: 1.2; border-color: #059669;">
+      <div class="box-header" style="background: #d1fae5; color: #065f46; border-color: #059669;">CorrectionItem</div>
+      <div class="box-body">
+        + int id<br>
+        + String original, recommended<br>
+        + String textblob_correction<br>
+        + String symspell_correction<br>
+        + int symspell_distance<br>
+        + String confidence_level ("High"|"Med")<br>
+        + List&lt;CandidateItem&gt; candidates
+      </div>
+    </div>
+
+    <div class="box" style="flex: 1; border-color: #0891b2;">
+      <div class="box-header" style="background: #cffafe; color: #155e75; border-color: #0891b2;">CorrectionStatistics</div>
+      <div class="box-body">
+        + int total_words<br>
+        + int total_corrections_made<br>
+        + float textblob_time_ms<br>
+        + float symspell_time_ms<br>
+        + float total_time_ms<br>
+        + float agreement_percentage
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

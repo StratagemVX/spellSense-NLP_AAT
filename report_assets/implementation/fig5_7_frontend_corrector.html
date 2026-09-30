@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  body {
+    margin: 0;
+    padding: 15px;
+    background: #0f172a;
+    font-family: 'Consolas', 'Courier New', monospace;
+    display: flex;
+    justify-content: center;
+  }
+  .window {
+    width: 900px;
+    background: #1e1e1e;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    overflow: hidden;
+  }
+  .titlebar {
+    background: #252526;
+    padding: 8px 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid #333;
+    font-size: 12px;
+    color: #cccccc;
+  }
+  .dots {
+    display: flex;
+    gap: 6px;
+  }
+  .dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+  }
+  .dot-red { background: #ff5f56; }
+  .dot-yellow { background: #ffbd2e; }
+  .dot-green { background: #27c93f; }
+  .tabs {
+    background: #2d2d2d;
+    display: flex;
+    border-bottom: 1px solid #1e1e1e;
+  }
+  .tab {
+    padding: 7px 16px;
+    background: #1e1e1e;
+    color: #ffffff;
+    font-size: 12px;
+    border-right: 1px solid #252526;
+    border-top: 2px solid #007acc;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .code-area {
+    padding: 14px;
+    font-size: 12px;
+    line-height: 1.55;
+    color: #d4d4d4;
+    overflow-x: auto;
+  }
+  .kw { color: #569cd6; font-weight: bold; }
+  .str { color: #ce9178; }
+  .fn { color: #dcdcaa; }
+  .num { color: #b5cea8; }
+  .comment { color: #6a9955; font-style: italic; }
+  .type { color: #4ec9b0; }
+  .var { color: #9cdcfe; }
+  .line-num {
+    display: inline-block;
+    width: 32px;
+    color: #858585;
+    user-select: none;
+    text-align: right;
+    margin-right: 14px;
+  }
+</style>
+</head>
+<body>
+<div class="window">
+  <div class="titlebar">
+    <div class="dots">
+      <div class="dot dot-red"></div>
+      <div class="dot dot-yellow"></div>
+      <div class="dot dot-green"></div>
+    </div>
+    <div style="font-weight: 500;">Interactive React Workspace - frontend/src/pages/CorrectorPage.tsx</div>
+    <div style="color: #64748b; font-size: 11px;">SpellSense NLP Suite</div>
+  </div>
+  <div class="tabs">
+    <div class="tab">
+      <span>📄</span>
+      <span>CorrectorPage.tsx</span>
+    </div>
+  </div>
+  <div class="code-area">
+    <div><span class="line-num">1</span><span class="kw">export const</span> <span class="fn">CorrectorPage</span>: <span class="type">React.FC</span> = () => {</div>
+<div><span class="line-num">2</span>  <span class="kw">const</span> [<span class="var">text</span>, <span class="fn">setText</span>] = <span class="fn">useState</span>(<span class="str">"I hav a beutiful day and I am goin to the markat."</span>);</div>
+<div><span class="line-num">3</span>  <span class="kw">const</span> [<span class="var">algorithm</span>, <span class="fn">setAlgorithm</span>] = <span class="fn">useState</span>&lt;<span class="str">"compare"</span> | <span class="str">"symspell"</span> | <span class="str">"textblob"</span>&gt;(<span class="str">"compare"</span>);</div>
+<div><span class="line-num">4</span>  <span class="kw">const</span> [<span class="var">status</span>, <span class="fn">setStatus</span>] = <span class="fn">useState</span>&lt;<span class="str">"idle"</span> | <span class="str">"processing"</span> | <span class="str">"success"</span> | <span class="str">"error"</span>&gt;(<span class="str">"idle"</span>);</div>
+<div><span class="line-num">5</span>  <span class="kw">const</span> [<span class="var">result</span>, <span class="fn">setResult</span>] = <span class="fn">useState</span>&lt;<span class="type">CorrectionResponse</span> | <span class="kw">null</span>&gt;(<span class="kw">null</span>);</div>
+<div><span class="line-num">6</span>  <span class="kw">const</span> <span class="var">isRequestingRef</span> = <span class="fn">useRef</span>(<span class="kw">false</span>);</div>
+<div><span class="line-num">7</span></div>
+<div><span class="line-num">8</span>  <span class="kw">const</span> <span class="fn">handleCorrect</span> = <span class="kw">async</span> (<span class="var">textToRun</span> = <span class="var">text</span>, <span class="var">algoToRun</span> = <span class="var">algorithm</span>) => {</div>
+<div><span class="line-num">9</span>    <span class="kw">if</span> (<span class="var">isRequestingRef</span>.<span class="var">current</span>) <span class="kw">return</span>; <span class="comment">// Concurrency guard</span></div>
+<div><span class="line-num">10</span>    <span class="fn">setStatus</span>(<span class="str">"processing"</span>);</div>
+<div><span class="line-num">11</span>    <span class="kw">try</span> {</div>
+<div><span class="line-num">12</span>      <span class="kw">const</span> <span class="var">data</span> = <span class="kw">await</span> <span class="fn">correctText</span>(<span class="var">textToRun</span>.<span class="fn">trim</span>(), <span class="var">algoToRun</span>);</div>
+<div><span class="line-num">13</span>      <span class="fn">setResult</span>(<span class="var">data</span>);</div>
+<div><span class="line-num">14</span>      <span class="fn">setStatus</span>(<span class="str">"success"</span>); <span class="comment">// Single render pass update</span></div>
+<div><span class="line-num">15</span>    } <span class="kw">catch</span> (<span class="var">e</span>) { <span class="fn">setStatus</span>(<span class="str">"error"</span>); }</div>
+<div><span class="line-num">16</span>  };</div>
+<div><span class="line-num">17</span>  <span class="kw">return</span> &lt;<span class="type">div</span> <span class="var">className</span>=<span class="str">"max-w-5xl mx-auto px-4"</span>&gt;...&lt;/<span class="type">div</span>&gt;;</div>
+<div><span class="line-num">18</span>};</div>
+
+  </div>
+</div>
+</body>
+</html>

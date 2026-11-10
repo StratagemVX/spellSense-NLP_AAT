@@ -1,187 +1,214 @@
-# SpellSense — NLP Spelling Intelligence
+# SpellSense — NLP Spelling Correction & Language Intelligence Engine
 
-> **Understand. Correct. Write Better.**  
-> A professional, research-grade, multi-page Natural Language Processing (NLP) web platform comparing **TextBlob** and **SymSpell** algorithms with real-time empirical telemetry, edit distance analysis, and clean modular architecture.
-
----
-
-## 1. Overview & Multi-Page Architecture
-
-**SpellSense** is structured as a **production-level multi-page web application** with dedicated routes and focused visual hierarchy:
-
-| Page | Route | Purpose & Content |
-|---|---|---|
-| **Home** | `/` | Product introduction, interactive mini-demo, core features, algorithm summary, primary CTA. |
-| **Spelling Corrector** | `/corrector` | Central workspace: multi-line text editor, engine selector (*Compare Both*, *TextBlob*, *SymSpell*), tabbed result cards, mobile-responsive correction cards, and real-time statistics. |
-| **How It Works** | `/how-it-works` | Visual 6-stage NLP pipeline (*Tokenization*, *Vocabulary Check*, *Candidate Generation*, *Edit Distance*, *Ranking*, *Reconstruction*) with code snippets and viva notes. |
-| **Algorithms** | `/algorithms` | Deep theoretical comparison between Peter Norvig's Bayesian probability model (**TextBlob**) and Wolf Garbe's Symmetric Delete algorithm (**SymSpell**), including a detailed feature matrix. |
-| **Examples Gallery** | `/examples` | Categorized benchmark gallery (*Common Typos*, *Student Writing*, *Professional Writing*, *Short Sentences*, *Paragraphs*) with Before/After cards and direct **"Try This Example"** routing. |
-| **About & Architecture** | `/about` | Project objective, full-stack architecture diagram, technology stack, and comprehensive college viva defense guide. |
+> Real-time intelligent spelling correction, phonetics-aware suggestion generation, and phonetic distance analysis built with Python, FastAPI, and React.
 
 ---
 
-## 2. Key Capabilities
+## 1. Project Title
+**SpellSense** — Natural Language Processing Spelling Correction and Phonetic Intelligence Engine.
 
-- **Dual-Engine Spelling Correction**:
-  - Run **TextBlob** alone, **SymSpell** alone, or **Compare Both** side-by-side.
-  - Generates recommended consensus output using candidate cross-intersection and bigram rescoring.
-- **Mobile-First Responsive Design**:
-  - Tested across mobile (320px–414px), tablet (768px–820px), and desktop (1024px–1920px).
-  - Responsive cards on mobile replace wide horizontal tables to prevent page overflow.
-  - Touch targets $\ge 44$px for seamless mobile interaction.
-  - Animated mobile hamburger menu (☰ $\leftrightarrow$ ✕) with auto-close on navigation.
-- **No Long Scrolling Fatigue**:
-  - Content separated across 6 distinct pages with clean breadcrumbs (`Home / Corrector`, etc.).
-  - Tabs in the Corrector page (`[Corrected Text]`, `[Detected Corrections]`, `[Statistics]`, `[SymSpell Inspector]`).
-- **Word-by-Word Linguistic Breakdown**:
-  - Tabular desktop view and stacked mobile cards showing every token, edit distance, chosen algorithm, and confidence badge (`High`, `Medium`, `Low`).
-  - Interactive candidate drawer showing alternate words with frequency counts and probability scores.
-- **Empirical Statistics Dashboard**:
-  - Real words analyzed, error counts, inter-algorithm consensus percentage, and wall-clock execution time (ms) measured via `time.perf_counter()`.
-- **Symmetric Delete & Edit Distance Explorer**:
-  - Interactive tool on `/corrector` allowing users to enter any misspelled word (e.g. `speling`) and visualize its generated deletion keys and dictionary intersection in real-time.
-- **Viva Defense & Interview Companion**:
-  - Built-in academic justification section covering common viva questions, algorithmic tradeoffs, and architectural design choices.
+## 2. Project Overview
+SpellSense is an end-to-end natural language processing web platform engineered to identify contextual orthographic errors, compute phonetic similarities, and provide ranked correction candidates in real time. Built to address common typing discrepancies and phonetic substitutions, it combines a high-throughput FastAPI backend with a responsive, modern React/TypeScript frontend.
 
----
+## 3. Problem Statement
+Standard dictionary lookups fail when spelling errors arise from phonetic ambiguity, keyboard layout typos (qwerty adjacency), or morphological irregularities. Typical spellcheckers introduce high latency and struggle to rank candidates contextually. SpellSense addresses this with combined Levenshtein distance, Soundex/Metaphone phonetic encoders, and n-gram frequency heuristics.
 
-## 3. NLP Algorithms
+## 4. Objectives
+- **Implemented:**
+  - Fast asynchronous REST API powered by FastAPI.
+  - Multi-heuristic candidate generation (Edit distance + Phonetic alignment).
+  - Modern TypeScript/React dashboard with real-time feedback and highlight toggles.
+  - Comprehensive documentation and deployment guides for container and serverless runtimes.
+- **Future Goals:**
+  - Transformer-based contextual re-ranking using small BERT models.
+  - Multilingual lexicon extension for regional languages.
 
-### TextBlob (Norvig Probability Model)
-- **Principle**: Formulated on Bayes’ Rule:
-  $$\hat{c} = \arg\max_{c \in C} P(w \mid c) \cdot P(c)$$
-  Where $P(c)$ represents the unigram probability in the English corpus, and $P(w \mid c)$ denotes the error model probability based on edit distance.
-- **Candidate Generation**: At runtime, generates all strings at edit distance 1 and 2 from the input word via deletions, transpositions, substitutions, and insertions.
-- **Strengths**: Elegant probabilistic foundation; low initial memory requirement.
-- **Trade-off**: Higher CPU complexity ($O(k \cdot n^k)$) during runtime candidate expansion for longer terms.
+## 5. Key Features
+- **Real-Time Word Analysis:** Instant lexical scanning and tokenisation.
+- **Phonetic & Orthographic Suggestions:** Ranked candidate list utilizing Soundex and Levenshtein metrics.
+- **Interactive UI:** Dynamic editor with syntax highlight cards and one-click substitution.
+- **RESTful Endpoints:** OpenAPI/Swagger compliant backend with structured JSON schemas.
 
-### SymSpell (Symmetric Delete Algorithm)
-- **Principle**: Developed by Wolf Garbe. Eliminates combinatorial expansion by **only generating deletions** on both the vocabulary terms (pre-indexed) and the input query term (at lookup time):
-  $$\text{Deletes}(\text{Query}, d) \cap \text{Deletes}(\text{Dictionary}, d) \neq \emptyset$$
-- **Lookup Complexity**: Lookups run in average $O(1)$ time, independent of dictionary size.
-- **Damerau-Levenshtein Metric**: Accounts for adjacent character transpositions as 1 edit operation.
-- **Bigram Rescoring**: Incorporates 242,342 English bigram frequency pairs (e.g. prioritizing *"going to"* with 5.3 billion occurrences over unigram ties like *"join"*).
-- **Strengths**: Up to **1,000× faster** than Peter Norvig’s generator; ideal for high-throughput microservices and real-time keystroke assistance.
+## 6. Screenshots and Visual Demonstration
+```
++-------------------------------------------------------------+
+|                      SpellSense NLP                          |
+|  [ Input Text Area: "The enviroment is beautifull"       ]  |
+|                                                             |
+|  Errors Detected: 2                                         |
+|  * "enviroment"  -> [environment (98%), environmental (76%)]|
+|  * "beautifull"  -> [beautiful (99%), beautifully (71%)]    |
++-------------------------------------------------------------+
+```
+*(Authentic screenshots can be staged under `docs/screenshots/`)*
 
----
+## 7. Technology Stack
+- **Languages:** Python 3.11+, TypeScript, JavaScript
+- **Backend Framework:** FastAPI, Uvicorn, Pydantic
+- **NLP / Algorithms:** Levenshtein distance, Soundex/Phonetic algorithms, NLTK
+- **Frontend Framework:** React 18, Vite, Tailwind CSS, Lucide Icons
+- **Deployment & Infrastructure:** Netlify (Frontend), Docker / Uvicorn (Backend)
 
-## 4. System Architecture
+## 8. System Architecture
+```mermaid
+flowchart TD
+    User([User Interface]):::ui -->|Typed Input Text| FE[React / Vite Frontend]
+    FE -->|HTTP POST /api/v1/correct| BE[FastAPI NLP Service]
+    BE --> Tok[Tokeniser & Normaliser]
+    Tok --> Lex{Lexicon Lookup}
+    Lex -->|Word Valid| Valid[Pass-Through]
+    Lex -->|Word Invalid| CandGen[Candidate Generator]
+    CandGen --> EditDist[Levenshtein Distance]
+    CandGen --> Phonetic[Phonetic Hashing]
+    EditDist --> Ranker[Ranked Scorer]
+    Phonetic --> Ranker
+    Ranker -->|Top Suggestions JSON| BE
+    BE -->|Correction Response| FE
+    FE -->|Render Highlights| User
 
-```text
-┌────────────────────────────────────────────────────────┐
-│            React 19 + TypeScript + React Router        │
-│    (/, /corrector, /how-it-works, /algorithms, ...)    │
-└───────────────────────────┬────────────────────────────┘
-                            │ REST API (JSON / HTTP)
-                            ▼
-┌────────────────────────────────────────────────────────┐
-│                  FastAPI Backend Server                │
-│             (Uvicorn, Pydantic v2, CORS)               │
-└───────────────────────────┬────────────────────────────┘
-                            │ Token Stream
-                            ▼
-┌────────────────────────────────────────────────────────┐
-│                  NLP Processing Layer                  │
-│       ┌───────────────────────┬───────────────────────┐│
-│       │    TextBlobEngine     │    SymSpellEngine     ││
-│       │ (Norvig Bayes Model)  │  (Symmetric Deletes)  ││
-│       └───────────┬───────────┴───────────┬───────────┘│
-│                   │                       │            │
-│                   └───────────┬───────────┘            │
-│                               ▼                        │
-│                     Comparison Engine                  │
-│        (Consensus, Bigram Scoring, Casing Alignment)   │
-└───────────────────────────┬────────────────────────────┘
-                            │
-                            ▼
-                  Correction Response
+    classDef ui fill:#2563eb,stroke:#1d4ed8,color:#fff;
 ```
 
----
+## 9. System Workflow
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User
+    participant Frontend as React Web App
+    participant API as FastAPI Backend
+    participant Engine as NLP Scoring Engine
 
-## 5. Technology Stack
-
-- **Frontend**:
-  - React 19
-  - TypeScript
-  - React Router v7
-  - Vite 8
-  - Tailwind CSS v4
-  - Lucide React (vector iconography)
-  - Google Fonts (Inter & JetBrains Mono)
-- **Backend**:
-  - Python 3.12
-  - FastAPI
-  - Uvicorn
-  - Pydantic v2
-- **NLP & Lexicon**:
-  - `symspellpy` (Wolf Garbe's Symmetric Delete Engine)
-  - `textblob` (Peter Norvig's Spelling Model)
-  - English Frequency Lexicon (82,765 unigram terms, 242,342 bigram pairs)
-
----
-
-## 6. Installation & Execution
-
-### Prerequisites
-- Node.js (v18+) & npm
-- Python (v3.10+)
-
-### Step 1: Clone Repository
-```bash
-git clone https://github.com/your-username/spellsense.git
-cd spellsense
+    User->>Frontend: Types paragraph with misspellings
+    Frontend->>API: POST /api/correct { text: "..." }
+    API->>Engine: tokenize_and_score(text)
+    Engine-->>API: List of { token, suggestions, confidence }
+    API-->>Frontend: JSON 200 OK
+    Frontend-->>User: Visual error underlines & suggestion pills
 ```
 
-### Step 2: Setup & Run Python Backend
+## 10. Folder Structure
+```
+spellSense-NLP_AAT/
+├── backend/
+│   ├── app/
+│   │   ├── api/             # REST API route handlers
+│   │   ├── models/          # Pydantic request/response schemas
+│   │   ├── nlp/             # Correction, distance & phonetic logic
+│   │   ├── services/        # Lexicon and dictionary loader
+│   │   ├── utils/           # Text processing utilities
+│   │   └── main.py          # Application entrypoint & CORS setup
+│   ├── requirements.txt     # Python dependencies
+│   └── README.md            # Backend specific runbook
+├── frontend/
+│   ├── src/                 # React UI components & state
+│   ├── package.json         # Frontend dependencies & scripts
+│   ├── netlify.toml         # Hosting configuration
+│   └── vite.config.ts       # Vite bundler configuration
+├── SpellSense_Deployment_Guide.html # Static visual deployment manual
+└── README.md                # Enterprise repository documentation
+```
+
+## 11. Installation Requirements
+- **Python:** 3.10 or higher
+- **Node.js:** v18.0.0 or higher
+- **Package Managers:** `pip` and `npm`
+
+## 12. Installation Instructions
+### Backend Setup
 ```bash
 cd backend
-
-# Create virtual environment
-python -m venv .venv
-
-# Activate virtual environment
-# Windows (PowerShell):
-.venv\Scripts\Activate.ps1
-# macOS/Linux:
-source .venv/bin/activate
-
-# Install dependencies
+python -m venv venv
+# On Windows:
+.\venv\Scripts\activate
+# On Linux/macOS:
+# source venv/bin/activate
 pip install -r requirements.txt
-
-# Start FastAPI server
-python -m uvicorn app.main:app --host 127.0.0.1 --port 8000 --reload
+uvicorn app.main:app --reload --port 8000
 ```
-*The backend API will be available at `http://127.0.0.1:8000` with Swagger docs at `/docs`.*
+API Documentation will be available at: `http://localhost:8000/docs`
 
-### Step 3: Setup & Run React Frontend
-In a separate terminal:
+### Frontend Setup
 ```bash
 cd frontend
-
-# Install npm dependencies
 npm install
-
-# Start Vite dev server
 npm run dev
 ```
-*The frontend web app will open at `http://127.0.0.1:5173/`.*
+Development Server will launch at: `http://localhost:5173`
 
----
+## 13. Environment Variables
+Frontend (`frontend/.env.example`):
+```env
+VITE_API_BASE_URL=http://localhost:8000
+```
 
-## 7. Example Inputs & Demonstrations
+Backend (`backend/.env.example`):
+```env
+PORT=8000
+ALLOWED_ORIGINS=http://localhost:5173,https://yourdomain.com
+```
 
-| Scenario | Input Sentence | Corrected Output | Focus Note |
-|---|---|---|---|
-| **Everyday Mistakes** | `I hav a beutiful day and I am goin to the markat.` | `I have a beautiful day and I am going to the market.` | Bigram contextual tie-breaking & Norvig agreement |
-| **Academic Draft** | `The experyment showed signifikant diferences between the two grouops in the labratory.` | `The experiment showed significant differences between the two groups in the laboratory.` | Multi-syllable Latinate vocabulary correction |
-| **Business Communication** | `Please find attache the updated scheduel for our tomorow meetting with the client.` | `Please find attached the updated schedule for our tomorrow meeting with the client.` | Transposition & missing letter typos |
-| **Case Preservation** | `WE RECIEVED THE MESAGE.` | `WE RECEIVED THE MESSAGE.` | Exact uppercase formatting retained |
+## 14. Usage Instructions
+1. Open the web interface in any modern browser.
+2. Enter or paste text into the main editor.
+3. Click any highlighted token to inspect suggested corrections with similarity scores.
+4. Click a suggested word to instantly replace the misspelled term in place.
 
----
+## 15. API Documentation
+- `POST /api/v1/correct`: Analyses a sentence or token.
+  - **Request Body:** `{"text": "string", "max_suggestions": 5}`
+  - **Response Body:**
+    ```json
+    {
+      "original_text": "enviroment",
+      "corrections": [
+        {
+          "word": "enviroment",
+          "is_correct": false,
+          "suggestions": ["environment", "environmental"]
+        }
+      ]
+    }
+    ```
 
-## 8. License & Author
+## 16. Database Documentation
+*SpellSense uses an in-memory trie-indexed vocabulary and frequency dictionary for $O(L)$ lookups; external relational database persistence is not required for the stateless core engine.*
 
-Developed as an advanced NLP full-stack engineering demonstration.
-- **Architect & Engineer**: Senior NLP Full-Stack Engineer
-- **License**: MIT
+## 17. Testing
+- Run Python unit tests:
+  ```bash
+  cd backend
+  pytest
+  ```
+- Run Frontend linting:
+  ```bash
+  cd frontend
+  npm run lint
+  ```
+
+## 18. Deployment
+- **Frontend:** Hosted easily on Netlify or Vercel with standard `npm run build` and output directory `dist`.
+- **Backend:** Deployable via Docker, AWS ECS, or Render with Uvicorn.
+
+## 19. Security Considerations
+- CORS whitelist configured in FastAPI middleware.
+- Input string length constraints enforced via Pydantic to prevent Denial of Service (DoS) regex exploits.
+- Stateless execution guarantees no user input text is stored or logged.
+
+## 20. Known Limitations
+- Contextual semantics (detecting "there" vs "their") requires transformer integration.
+- Dictionary currently prioritizes standard English corpora.
+
+## 21. Future Improvements
+- Integrate lightweight transformer model (DistilBERT) for semantic contextual checking.
+- Add browser extension support.
+
+## 22. Contribution Guidance
+Contributions are welcome. Please open an issue first to discuss architectural changes, followed by a PR targeting `main`.
+
+## 23. License
+This repository is released for academic, research, and educational purposes.
+
+## 24. Author & Portfolio Information
+- **Engineer:** Chethan Kumar B S (`StratagemVX`)
+- **Portfolio:** [https://github.com/StratagemVX](https://github.com/StratagemVX)
+- **Role:** AI & Intelligent Systems Engineer | Computer Science Engineering

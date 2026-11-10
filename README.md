@@ -345,3 +345,19 @@ npm run build
 ## License
 
 This software is maintained as an open-source educational and research project. Refer to the repository root for licensing terms.
+
+## Verification and maintenance
+
+Keep the NLP model/algorithm description, data and evaluation claims, dependencies, and setup instructions aligned with the implementation. Clearly separate measured results from intended capabilities.
+
+### Build and test commands
+
+No root package manifest was available during this pass. Select commands from the actual language-specific manifest and CI configuration.
+
+### Contribution and security notes
+
+- Document model assumptions, training/evaluation data, and known limitations where relevant.
+- Never commit credentials, private keys, personal data, or local environment files.
+- Use placeholder-only examples and deployment-managed secrets.
+- Include reproducible issue steps and expected/actual results.
+- Run relevant build, lint, and test checks before merging.

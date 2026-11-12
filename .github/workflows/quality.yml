@@ -21,7 +21,10 @@ jobs:
           cache-dependency-path: backend/requirements.txt
 
       - name: Install backend dependencies
-        run: python -m pip install -r backend/requirements.txt
+        run: python -m pip install -r backend/requirements.txt pip-audit==2.10.1
+
+      - name: Audit backend dependencies (pip-audit)
+        run: pip-audit -r backend/requirements.txt
 
       - name: Download TextBlob / NLTK corpora
         run: python -c "import nltk; nltk.download('punkt'); nltk.download('brown')"
@@ -50,6 +53,9 @@ jobs:
 
       - name: Audit production dependencies (critical threshold)
         run: npm audit --omit=dev --audit-level=critical
+
+      - name: Audit full frontend dependency tree (high+ threshold)
+        run: npm audit --audit-level=high
 
       - name: TypeScript typecheck
         run: npx tsc --noEmit
